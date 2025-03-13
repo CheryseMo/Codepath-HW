@@ -1,0 +1,94 @@
+/* Main App styling */
+.App {
+    text-align: center;
+    margin-top: 50px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Subject & Difficulty combined buttons */
+  .subject-difficulty-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .subject-difficulty-buttons button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .subject-difficulty-buttons button:hover {
+    background-color: #0056b3;
+  }
+  
+  .subject-difficulty-buttons button:focus {
+    outline: none;
+  }
+  
+  /* Flashcard container styling */
+  .flashcard-set {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+  }
+  
+  /* Flashcard styling */
+  .card {
+    background-color: #fff;
+    width: 300px;
+    height: 350px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    perspective: 1000px;
+    padding: 10px;
+  }
+  
+  /* Card categories based on difficulty */
+  .easy-card {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+  
+  .medium-card {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+  }
+  
+  .hard-card {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+  
+  /* Image styling */
+  .card-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  /* Category and difficulty label */
+  .category {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #777;
+  }
+  

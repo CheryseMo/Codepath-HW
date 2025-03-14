@@ -2,32 +2,98 @@ import React, { useState } from "react";
 import Card from "./Card";
 
 const FlashcardSet = ({ flashcards }) => {
-  const [currentCardIndex, setCurrentCardIndex] = useState(Math.floor(Math.random() * flashcards.length));
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [userGuess, setUserGuess] = useState("");
+  const [feedback, setFeedback] = useState(null);
+  const [streak, setStreak] = useState(0);
+  const [longestStreak, setLongestStreak] = useState(0);
+  const [masteredCards, setMasteredCards] = useState([]);
 
-  // Function to show the next random card
+  // Move to next card
   const nextCard = () => {
-    setCurrentCardIndex(Math.floor(Math.random() * flashcards.length));
-    setShowAnswer(false); // Reset to showing the question when a new card is shown
+    setFeedback(null);
+    setShowAnswer(false);
+    setUserGuess("");
+    setCurrentCardIndex((prevIndex) => (prevIndex + 1) % flashcards.length);
   };
 
-  // Function to toggle between question and answer
-  const toggleAnswer = () => {
-    setShowAnswer(!showAnswer);
+  // Move to previous card
+  const prevCard = () => {
+    setFeedback(null);
+    setShowAnswer(false);
+    setUserGuess("");
+    setCurrentCardIndex(
+      (prevIndex) => (prevIndex - 1 + flashcards.length) % flashcards.length
+    );
   };
+
+  // Shuffle the flashcards
+  const shuffleCards = () => {
+    flashcards.sort(() => Math.random() - 0.5);
+    setCurrentCardIndex(0);
+  };
+
+  // Check user's answer
+  const checkAnswer = () => {
+    if (userGuess.trim().toLowerCase() === flashcards[currentCardIndex].answer.toLowerCase()) {
+      setFeedback("Correct!");
+      setStreak((prev) => {
+        const newStreak = prev + 1;
+        if (newStreak > longestStreak) setLongestStreak(newStreak);
+        return newStreak;
+      });
+    } else {
+      setFeedback("Incorrect. Try again!");
+      setStreak(0);
+    }
+  };
+
+  // Mark a card as mastered
+  const markAsMastered = () => {
+    setMasteredCards([...masteredCards, flashcards[currentCardIndex]]);
+  };
+
+  // Filter out mastered cards
+  const activeCards = flashcards.filter(card => !masteredCards.includes(card));
 
   return (
     <div className="flashcard-set">
-      <Card
-        question={flashcards[currentCardIndex].question}
-        answer={flashcards[currentCardIndex].answer}
-        showAnswer={showAnswer}
-        onClickAnswer={toggleAnswer}
-        difficulty={flashcards[currentCardIndex].difficulty}
-        subject={flashcards[currentCardIndex].subject}
-        image={flashcards[currentCardIndex].image}
-      />
-      <button onClick={nextCard}>Next Card</button> {/* Button to show the next random card */}
+      {activeCards.length > 0 ? (
+        <>
+          <Card
+            question={activeCards[currentCardIndex].question}
+            answer={activeCards[currentCardIndex].answer}
+            showAnswer={showAnswer}
+            onClickAnswer={() => setShowAnswer(!showAnswer)}
+            difficulty={activeCards[currentCardIndex].difficulty}
+            subject={activeCards[currentCardIndex].subject}
+            image={activeCards[currentCardIndex].image}
+          />
+
+          <input
+            type="text"
+            placeholder="Enter your guess..."
+            value={userGuess}
+            onChange={(e) => setUserGuess(e.target.value)}
+          />
+          <button onClick={checkAnswer}>Submit</button>
+          {feedback && <p>{feedback}</p>}
+
+          <div className="navigation-buttons">
+            <button onClick={prevCard}>Previous</button>
+            <button onClick={nextCard}>Next</button>
+          </div>
+
+          <button onClick={shuffleCards}>Shuffle</button>
+          <button onClick={markAsMastered}>Mark as Mastered</button>
+
+          <p>Current Streak: {streak}</p>
+          <p>Longest Streak: {longestStreak}</p>
+        </>
+      ) : (
+        <p>All cards mastered! Well done!</p>
+      )}
     </div>
   );
 };
